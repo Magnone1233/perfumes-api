@@ -1,0 +1,159 @@
+{
+  "info": {
+    "name": "Fragrances API",
+    "description": "Postman collection for the Fragrances CRUD API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "fragranceId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Create Fragrance",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "name",
+              "value": "Bleu de Chanel",
+              "type": "text"
+            },
+            {
+              "key": "description",
+              "value": "Woody citrus fragrance",
+              "type": "text"
+            },
+            {
+              "key": "price",
+              "value": "120.50",
+              "type": "text"
+            },
+            {
+              "key": "promotionalPrice",
+              "value": "99.99",
+              "type": "text"
+            },
+            {
+              "key": "stock",
+              "value": "15",
+              "type": "text"
+            },
+            {
+              "key": "image",
+              "type": "file",
+              "src": ""
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/fragrances",
+          "host": ["{{baseUrl}}"],
+          "path": ["fragrances"]
+        },
+        "description": "Creates a new fragrance. Attach an image file if needed."
+      },
+      "response": []
+    },
+    {
+      "name": "List Fragrances",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/fragrances",
+          "host": ["{{baseUrl}}"],
+          "path": ["fragrances"]
+        },
+        "description": "Returns all fragrances."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Fragrance By Id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/fragrances/{{fragranceId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["fragrances", "{{fragranceId}}"]
+        },
+        "description": "Returns one fragrance by id."
+      },
+      "response": []
+    },
+    {
+      "name": "Update Fragrance",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "name",
+              "value": "Bleu de Chanel Parfum",
+              "type": "text"
+            },
+            {
+              "key": "description",
+              "value": "Updated woody fragrance",
+              "type": "text"
+            },
+            {
+              "key": "price",
+              "value": "130.00",
+              "type": "text"
+            },
+            {
+              "key": "promotionalPrice",
+              "value": "110.00",
+              "type": "text"
+            },
+            {
+              "key": "stock",
+              "value": "20",
+              "type": "text"
+            },
+            {
+              "key": "image",
+              "type": "file",
+              "src": ""
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/fragrances/{{fragranceId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["fragrances", "{{fragranceId}}"]
+        },
+        "description": "Updates a fragrance by id. You can send only the fields you want to change."
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Fragrance",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/fragrances/{{fragranceId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["fragrances", "{{fragranceId}}"]
+        },
+        "description": "Deletes a fragrance by id."
+      },
+      "response": []
+    }
+  ]
+}

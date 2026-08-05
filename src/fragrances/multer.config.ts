@@ -3,13 +3,14 @@ import { randomUUID } from 'crypto';
 import { mkdirSync } from 'fs';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
+import { getUploadsRoot } from '../config/uploads-path';
 
 const allowedMimeTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
 
 export const fragranceImageUploadOptions = {
   storage: diskStorage({
     destination: (_request, _file, callback) => {
-      const uploadPath = join(process.cwd(), 'uploads', 'fragrances');
+      const uploadPath = join(getUploadsRoot(), 'fragrances');
       mkdirSync(uploadPath, { recursive: true });
       callback(null, uploadPath);
     },
@@ -27,9 +28,7 @@ export const fragranceImageUploadOptions = {
   ) => {
     if (!allowedMimeTypes.has(file.mimetype)) {
       callback(
-        new BadRequestException(
-          'Only JPG, PNG and WebP images are allowed.',
-        ) as unknown as Error,
+        new BadRequestException('Only JPG, PNG and WebP images are allowed.'),
         false,
       );
       return;

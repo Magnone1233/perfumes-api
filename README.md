@@ -27,9 +27,15 @@ API NestJS para administrar fragrances con CRUD completo, persistencia en MySQL 
 npm install
 ```
 
-2. Crear tu archivo `.env` usando `.env.example` como base.
+2. Levantar MySQL con Docker Compose:
 
-3. Asegurarte de tener creada la base de datos MySQL.
+```bash
+docker compose up -d
+```
+
+3. Crear tu archivo `.env` usando `.env.example` como base.
+
+La base `fragrances_store` ya se crea automáticamente con Docker Compose.
 
 ## Variables de entorno
 
@@ -37,17 +43,66 @@ npm install
 PORT=3000
 DB_HOST=localhost
 DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=
+DB_USER=fragrances_user
+DB_PASSWORD=fragrances_pass
 DB_NAME=fragrances_store
 DB_SYNCHRONIZE=true
+CORS_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+UPLOADS_DIR=./uploads
 ```
+
+## MySQL con Docker Compose
+
+El archivo [docker-compose.yml](docker-compose.yml) levanta un contenedor MySQL con esta configuración:
+
+- Host: `localhost`
+- Port: `3306`
+- Database: `fragrances_store`
+- User: `fragrances_user`
+- Password: `fragrances_pass`
+- Root password: `root`
+
+Comandos útiles:
+
+```bash
+docker compose up -d
+docker compose ps
+docker compose logs -f mysql
+docker compose down
+```
+
+Si querés borrar también la data persistida:
+
+```bash
+docker compose down -v
+```
+
+## DBeaver
+
+Para conectarte desde DBeaver:
+
+1. `Database` -> `New Database Connection`
+2. Elegí `MySQL`
+3. Completá:
+
+- Host: `localhost`
+- Port: `3306`
+- Database: `fragrances_store`
+- Username: `fragrances_user`
+- Password: `fragrances_pass`
+
+4. Tocá `Test Connection`
+5. Guardá la conexión
+
+Si DBeaver te pide bajar el driver de MySQL, aceptalo.
 
 ## Ejecutar el proyecto
 
 ```bash
 npm run start:dev
 ```
+
+Si la API corre en tu máquina y MySQL en Docker, `DB_HOST=localhost` es correcto.
 
 ## Endpoints
 
@@ -73,3 +128,4 @@ Para `POST /fragrances` y `PATCH /fragrances/:id`, usar `form-data`:
 - Las imágenes se guardan localmente en el servidor.
 - El backend persiste solo la ruta de la imagen en la base.
 - `DB_SYNCHRONIZE=true` sirve para desarrollo; en producción conviene migraciones.
+- En Railway (u otros PaaS), montá un volumen persistente y configurá `UPLOADS_DIR` apuntando a esa ruta; si no, al redeploy podés perder archivos y obtener `404` en `/uploads/...`.
