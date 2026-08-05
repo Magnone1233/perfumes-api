@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { existsSync, unlinkSync } from 'fs';
 import { join } from 'path';
 import { Repository } from 'typeorm';
+import { getUploadsRoot } from '../config/uploads-path';
 import { CreateFragranceDto } from './dto/create-fragrance.dto';
 import { UpdateFragranceDto } from './dto/update-fragrance.dto';
 import { Fragrance } from './entities/fragrance.entity';
@@ -42,7 +43,9 @@ export class FragrancesService {
   }
 
   async findOne(id: number) {
-    const fragrance = await this.fragrancesRepository.findOne({ where: { id } });
+    const fragrance = await this.fragrancesRepository.findOne({
+      where: { id },
+    });
 
     if (!fragrance) {
       throw new NotFoundException(`Fragrance with id ${id} was not found.`);
@@ -115,7 +118,8 @@ export class FragrancesService {
 
   private removeImageFile(imagePath: string) {
     const normalizedPath = imagePath.replace(/^\/+/, '');
-    const filePath = join(process.cwd(), normalizedPath);
+    const relativeToUploads = normalizedPath.replace(/^uploads\//, '');
+    const filePath = join(getUploadsRoot(), relativeToUploads);
 
     if (existsSync(filePath)) {
       unlinkSync(filePath);
