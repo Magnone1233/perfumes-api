@@ -7,6 +7,23 @@ import {
   Min,
 } from 'class-validator';
 
+const parseDecimalInput = (value: unknown): unknown => {
+  if (typeof value !== 'string') {
+    return value;
+  }
+
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return trimmed;
+  }
+
+  const normalized = trimmed.includes(',')
+    ? trimmed.replace(/\./g, '').replace(',', '.')
+    : trimmed;
+
+  return Number(normalized);
+};
+
 export class UpdateFragranceDto {
   @IsOptional()
   @IsString()
@@ -19,14 +36,14 @@ export class UpdateFragranceDto {
   description?: string | null;
 
   @IsOptional()
-  @Type(() => Number)
+  @Transform(({ value }) => parseDecimalInput(value))
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0.01)
   price?: number;
 
   @IsOptional()
   @Transform(({ value }) => (value === '' ? null : value))
-  @Type(() => Number)
+  @Transform(({ value }) => parseDecimalInput(value))
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0.01)
   promotionalPrice?: number | null;
