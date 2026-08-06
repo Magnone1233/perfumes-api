@@ -8,9 +8,11 @@ import {
   Patch,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AdminAuthGuard } from '../admin/admin-auth.guard';
 import { CreateFragranceDto } from './dto/create-fragrance.dto';
 import { UpdateFragranceDto } from './dto/update-fragrance.dto';
 import { FragrancesService } from './fragrances.service';
@@ -21,6 +23,7 @@ export class FragrancesController {
   constructor(private readonly fragrancesService: FragrancesService) {}
 
   @Post()
+  @UseGuards(AdminAuthGuard)
   @UseInterceptors(FileInterceptor('image', fragranceImageUploadOptions))
   create(
     @Body() createFragranceDto: CreateFragranceDto,
@@ -40,6 +43,7 @@ export class FragrancesController {
   }
 
   @Patch(':id')
+  @UseGuards(AdminAuthGuard)
   @UseInterceptors(FileInterceptor('image', fragranceImageUploadOptions))
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -50,6 +54,7 @@ export class FragrancesController {
   }
 
   @Delete(':id')
+  @UseGuards(AdminAuthGuard)
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.fragrancesService.remove(id);
   }

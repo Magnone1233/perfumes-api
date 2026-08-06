@@ -49,6 +49,9 @@ DB_NAME=fragrances_store
 DB_SYNCHRONIZE=true
 CORS_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
 UPLOADS_DIR=./uploads
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=admin123
+ADMIN_TOKEN_SECRET=change-this-admin-token-secret
 ```
 
 ## MySQL con Docker Compose
@@ -106,11 +109,17 @@ Si la API corre en tu máquina y MySQL en Docker, `DB_HOST=localhost` es correct
 
 ## Endpoints
 
+- `POST /admin/login`
 - `POST /fragrances`
 - `GET /fragrances`
 - `GET /fragrances/:id`
 - `PATCH /fragrances/:id`
 - `DELETE /fragrances/:id`
+
+### Acceso administrador
+
+- `POST`, `PATCH` y `DELETE` en `/fragrances` requieren header `Authorization: Bearer <token>`.
+- El token se obtiene en `POST /admin/login` con `username` y `password`.
 
 ## Ejemplo en Postman
 

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { FragrancesModule } from './fragrances/fragrances.module';
@@ -25,6 +26,7 @@ import { FragrancesModule } from './fragrances/fragrances.module';
           configService.get<string>('DB_SYNCHRONIZE', 'true') === 'true',
       }),
     }),
+    AdminModule,
     FragrancesModule,
   ],
   controllers: [AppController],
