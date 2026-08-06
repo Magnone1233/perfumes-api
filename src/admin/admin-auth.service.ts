@@ -35,11 +35,7 @@ export class AdminAuthService {
       exp: Math.floor(Date.now() / 1000) + this.tokenTtlSeconds,
     };
 
-    const encodedPayload = Buffer.from(
-      JSON.stringify(payload),
-      'utf8',
-    ).toString('base64url'  'utf8',
-    ).toString('base64url');
+    const encodedPayload = this.toBase64Url(JSON.stringify(payload));
     const signature = this.sign(encodedPayload);
 
     return {
@@ -62,7 +58,7 @@ export class AdminAuthService {
 
     try {
       const payload = JSON.parse(
-        Buffer.from(encodedPayload, 'base64url').toString('utf8'),
+        this.fromBase64Url(encodedPayload),
       ) as AdminTokenPayload;
 
       if (!payload?.u || typeof payload.exp !== 'number') {
@@ -89,7 +85,26 @@ export class AdminAuthService {
       'change-this-admin-token-secret',
     );
 
-    return createHmac('sha256', secret).update(value).digest('base64url');
+    return this.normalizeBase64Url(
+      createHmac('sha256', secret).update(value).digest('base64'),
+    );
+  }
+
+  private toBase64Url(value: string): string {
+    return this.normalizeBase64Url(
+      Buffer.from(value, 'utf8').toString('base64'),
+    );
+  }
+
+  private fromBase64Url(value: string): string {
+    const normalized = value.replace(/-/g, '+').replace(/_/g, '/');
+    const paddingLength = (4 - (normalized.length % 4)) % 4;
+    const padded = `${normalized}${'='.repeat(paddingLength)}`;
+    return Buffer.from(padded, 'base64').toString('utf8');
+  }
+
+  private normalizeBase64Url(value: string): string {
+    return value.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
   }
 
   private safeEquals(first: string, second: string): boolean {
